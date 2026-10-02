@@ -1,0 +1,6 @@
+@ApiDAT.API_HostAddress = http://localhost:5079
+
+GET {{ApiDAT.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

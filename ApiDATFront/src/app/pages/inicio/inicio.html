@@ -1,0 +1,471 @@
+<!-- HEADER -->
+<header class="bg-dark border-bottom border-danger border-5 py-4 shadow">
+
+  <div class="container">
+
+    <h1 class="text-center text-white fw-bold m-0">
+      CONSULTOR DE APIS
+    </h1>
+
+  </div>
+
+</header>
+
+
+<!-- NAVBAR -->
+<nav class="navbar bg-secondary shadow-sm">
+
+  <div class="container justify-content-center">
+
+    <div class="d-flex gap-4">
+
+      <button
+        type="button"
+        class="btn"
+        [class.btn-danger]="apartadoSeleccionado() === 'apartado1'"
+        [class.text-white]="apartadoSeleccionado() !== 'apartado1'"
+        (click)="seleccionarApartado('apartado1')"
+      >
+        Apartado 1
+      </button>
+
+
+      <button
+        type="button"
+        class="btn"
+        [class.btn-danger]="apartadoSeleccionado() === 'apartado2'"
+        [class.text-white]="apartadoSeleccionado() !== 'apartado2'"
+        (click)="seleccionarApartado('apartado2')"
+      >
+        Apartado 2
+      </button>
+
+
+      <button
+        type="button"
+        class="btn"
+        [class.btn-danger]="apartadoSeleccionado() === 'apartado3'"
+        [class.text-white]="apartadoSeleccionado() !== 'apartado3'"
+        (click)="seleccionarApartado('apartado3')"
+      >
+        Apartado 3
+      </button>
+
+    </div>
+
+  </div>
+
+</nav>
+
+
+<!-- ===================================================== -->
+<!-- APARTADO 1 -->
+<!-- ===================================================== -->
+
+@if (apartadoSeleccionado() === 'apartado1') {
+
+  <main class="container py-5">
+
+
+    <!-- SELECTORES -->
+    <div class="row justify-content-center g-4">
+
+
+      <!-- PEDIDO -->
+      <div class="col-12 col-md-6">
+
+        <div class="card shadow border-0 h-100">
+
+          <div class="card-body p-4">
+
+            <label
+              for="pedidoSelect"
+              class="form-label fw-bold fs-5"
+            >
+              Pedido que quieres consultar
+            </label>
+
+            <select
+              #pedidoSelect
+              id="pedidoSelect"
+              class="form-select form-select-lg"
+              [value]="pedidoSeleccionado()"
+              (change)="seleccionarPedido(pedidoSelect.value)"
+            >
+
+              <option value="">
+                Selecciona un pedido
+              </option>
+
+              <option value="sears">
+                Pedido Sears
+              </option>
+
+              <option value="sanborns">
+                Pedido Sanborns
+              </option>
+
+              <option value="dax">
+                Pedido DAX
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- API -->
+      <div class="col-12 col-md-6">
+
+        <div class="card shadow border-0 h-100">
+
+          <div class="card-body p-4">
+
+            <label
+              class="form-label fw-bold fs-5"
+            >
+              API que quieres consultar
+            </label>
+
+
+            <!-- TODAVÍA NO SE SELECCIONA PEDIDO -->
+            @if (pedidoSeleccionado() === '') {
+
+              <select
+                class="form-select form-select-lg"
+                disabled
+              >
+
+                <option>
+                  Selecciona primero un pedido
+                </option>
+
+              </select>
+
+            }
+
+
+            <!-- APIS DE SEARS -->
+            @else if (pedidoSeleccionado() === 'sears') {
+
+              <select
+                #apiSears
+                class="form-select form-select-lg"
+                [value]="apiSeleccionada()"
+                (change)="seleccionarApi(apiSears.value)"
+              >
+
+                <option value="">
+                  Selecciona una API
+                </option>
+
+                <option value="datos">
+                  API Datos DAT
+                </option>
+
+                <option value="sears">
+                  API Pedidos Sears
+                </option>
+
+              </select>
+
+            }
+
+
+            <!-- APIS DE SANBORNS -->
+            @else if (pedidoSeleccionado() === 'sanborns') {
+
+              <select
+                class="form-select form-select-lg"
+                disabled
+              >
+
+                <option>
+                  No hay APIs de Sanborns todavía
+                </option>
+
+              </select>
+
+            }
+
+
+            <!-- APIS DE DAX -->
+            @else if (pedidoSeleccionado() === 'dax') {
+
+              <select
+                class="form-select form-select-lg"
+                disabled
+              >
+
+                <option>
+                  No hay APIs de DAX todavía
+                </option>
+
+              </select>
+
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- CARGANDO -->
+    @if (cargando()) {
+
+      <div class="alert alert-secondary text-center mt-5">
+        Cargando datos...
+      </div>
+
+    }
+
+
+    <!-- ERROR -->
+    @else if (error()) {
+
+      <div class="alert alert-danger text-center mt-5">
+        {{ error() }}
+      </div>
+
+    }
+
+
+    <!-- TABLA API DATOS DAT -->
+    @else if (
+      pedidoSeleccionado() === 'sears' &&
+      apiSeleccionada() === 'datos'
+    ) {
+
+      <div class="card shadow mt-5 border-0">
+
+        <div class="card-header bg-danger text-white text-center py-3">
+
+          <h2 class="h4 fw-bold m-0">
+            API Datos DAT
+          </h2>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+          <table
+            class="table table-striped table-hover table-bordered align-middle mb-0"
+          >
+
+            <thead class="table-dark">
+
+              <tr>
+                <th>Personas</th>
+                <th>Edad</th>
+                <th>Descripción</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (dato of datos(); track $index) {
+
+                <tr>
+
+                  <td>
+                    {{ dato.personas ?? '-' }}
+                  </td>
+
+                  <td>
+                    {{ dato.edad ?? '-' }}
+                  </td>
+
+                  <td>
+                    {{ dato.descripcion ?? '-' }}
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <!-- TABLA API PEDIDOS SEARS -->
+    @else if (
+      pedidoSeleccionado() === 'sears' &&
+      apiSeleccionada() === 'sears'
+    ) {
+
+      <div class="card shadow mt-5 border-0">
+
+        <div class="card-header bg-danger text-white text-center py-3">
+
+          <h2 class="h4 fw-bold m-0">
+            API Pedidos Sears
+          </h2>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+          <table
+            class="table table-striped table-hover table-bordered align-middle mb-0"
+          >
+
+            <thead class="table-dark">
+
+              <tr>
+                <th>Folio</th>
+                <th>Cliente</th>
+                <th>Tipo</th>
+                <th>Monto</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (pedido of pedidosSears(); track $index) {
+
+                <tr>
+
+                  <td>
+                    {{ pedido.folio ?? '-' }}
+                  </td>
+
+                  <td>
+                    {{ pedido.cliente ?? '-' }}
+                  </td>
+
+                  <td>
+                    {{ pedido.tipo ?? '-' }}
+                  </td>
+
+                  <td>
+                    {{ pedido.monto ?? '-' }}
+                  </td>
+
+                  <td>
+                    {{ pedido.estado ?? '-' }}
+                  </td>
+
+                  <td>
+                    {{ pedido.fecha ?? '-' }}
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    }
+
+
+    <!-- VOLVER AL ESTADO INICIAL -->
+    @if (
+      apiSeleccionada() !== '' &&
+      !cargando() &&
+      !error()
+    ) {
+
+      <div class="text-center mt-4">
+
+        <button
+          type="button"
+          class="btn btn-danger px-4"
+          (click)="volverInicio()"
+        >
+          Volver al inicio
+        </button>
+
+      </div>
+
+    }
+
+  </main>
+
+}
+
+
+<!-- ===================================================== -->
+<!-- APARTADO 2 -->
+<!-- ===================================================== -->
+
+@else if (apartadoSeleccionado() === 'apartado2') {
+
+  <main class="container py-5">
+
+    <div class="card shadow border-0">
+
+      <div class="card-body p-5 text-center">
+
+        <h2 class="text-danger fw-bold mb-3">
+          Apartado 2
+        </h2>
+
+        <p class="fs-4 text-secondary">
+          Aquí va el contenido del Apartado 2
+        </p>
+
+      </div>
+
+    </div>
+
+  </main>
+
+}
+
+
+<!-- ===================================================== -->
+<!-- APARTADO 3 -->
+<!-- ===================================================== -->
+
+@else if (apartadoSeleccionado() === 'apartado3') {
+
+  <main class="container py-5">
+
+    <div class="card shadow border-0">
+
+      <div class="card-body p-5 text-center">
+
+        <h2 class="text-danger fw-bold mb-3">
+          Apartado 3
+        </h2>
+
+        <p class="fs-4 text-secondary">
+          Aquí va el contenido del Apartado 3
+        </p>
+
+      </div>
+
+    </div>
+
+  </main>
+
+}
