@@ -2,6 +2,9 @@ using ApiDAT.Application.Interfaces;
 using ApiDAT.Application.Services;
 using ApiDAT.Infrastructure.Repositories;
 
+
+using ApiDAT.Infrastructure.Logging;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Agregar Controllers
@@ -17,6 +20,22 @@ var connectionString = builder.Configuration
     ?? throw new InvalidOperationException(
         "No se encontró la cadena de conexión SqlConnection."
     );
+
+var requestLogPath = 
+    builder.Configuration["RequestLogPath"]
+    ?? throw new InvalidOperationException(
+        "No se encontró RquestLogPath en appsettings.json"
+    );
+
+var requestLogFullPath = 
+    Path.Combine(
+        builder.Environment.ContentRootPath,
+        requestLogPath
+    );
+
+builder.Services.AddScoped<IRequestLogService>(
+    provider => new RequestLogService(requestLogFullPath)
+);
 
 // Inyección de dependencias
 builder.Services.AddScoped<IDatosDATRepository>(
