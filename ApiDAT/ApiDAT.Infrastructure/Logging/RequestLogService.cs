@@ -22,7 +22,7 @@ namespace ApiDAT.Infrastructure.Logging
             DateTime fechaHora = DateTime.Now;
 
             string nombreArchivo =
-            $"Request_{nombreApi}_{fechaHora:yyyy-MM-dd_HH-mm-ss}.txt";
+            $"Request_{nombreApi}_{fechaHora:yyyy-MM-dd}.txt";
 
             string rutaCompleta =
             Path.Combine(_rutaLogs, nombreArchivo);
@@ -44,7 +44,7 @@ namespace ApiDAT.Infrastructure.Logging
             {contenido}
             """;
 
-            await File.WriteAllTextAsync (
+            await File.AppendAllTextAsync (
                 rutaCompleta,
                 texto
             );
